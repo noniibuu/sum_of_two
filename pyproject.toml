@@ -1,0 +1,19 @@
+[project]
+name = "kalymbet-new"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "Nurgul Kalymbet", email = "n.kbvva@gmail.com" }
+]
+requires-python = ">=3.10.14"
+dependencies = [
+    "ipython>=8.37.0",
+]
+
+[project.scripts]
+kalymbet-new = "kalymbet_new:main"
+
+[build-system]
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"

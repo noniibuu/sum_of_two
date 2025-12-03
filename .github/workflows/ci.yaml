@@ -1,36 +1,40 @@
-name: "CI"
+name: CI
 
-on: push
+on: [push]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: astral-sh/setup-uv@v6
+
       - run: uv sync --frozen --dev
+
       - name: Run tests
-        run: |
-          uv run pytest -v tests/
+        run: uv run pytest
 
   package:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-    - uses: astral-sh/setup-uv@v6
+      - uses: astral-sh/setup-uv@v6
 
-    - run: uv sync --frozen --dev
+      - run: uv sync --frozen --dev
 
-    - run: uv build
+      - run: uv build
 
-    - uses: actions/upload-artifact@v3
-      with:
-        name: package
-        path: dist/*
+      - uses: actions/upload-artifact@v3
+        with:
+          name: package
+          path: dist/*
 
-    - run: |
-        uv publish \
-          --publish-url https://test.pypi.org/legacy/ \
-          --check-url https://test.pypi.org/simple/ \
-          dist/*
+      - name: Publish to TestPyPI
+        run: |
+          uv publish \
+            --publish-url https://test.pypi.org/legacy/ \
+            --check-url https://test.pypi.org/simple/ \
+            dist/*
